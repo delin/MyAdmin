@@ -1,0 +1,51 @@
+{% load i18n %}
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Delin <delin@delin.pro>">
+{#    <link rel="shortcut icon" href="../../assets/ico/favicon.png">#}
+
+    <title>{{ page_title|default:"=)" }} &middot; MyAdmin</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+{#    <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">#}
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/signin.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="{% static 'js/html5shiv.js' %}"></script>
+      <script src="{% static 'js/respond.min.js' %}"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% ifequal message.tags "error" %}alert-danger{% else %}alert-{{ message.tags }}{% endifequal %}">
+                    <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+                    <strong>{% if message.tags %}{{ message.tags|capfirst }}!{% endif %}</strong> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+      <form class="form-signin" method="post" action="{% url 'login' %}">{% csrf_token %}
+        <h2 class="form-signin-heading">{% blocktrans %}Please sign in{% endblocktrans %}</h2>
+        <input type="text" class="form-control" placeholder="{% trans "Username" %}" autofocus name="username">
+        <input type="password" class="form-control" placeholder="{% trans "Password" %}" name="password">
+{#        <label class="checkbox">#}
+{#          <input type="checkbox" value="remember-me"> Remember me#}
+{#        </label>#}
+        <button class="btn btn-lg btn-primary btn-block" type="submit">{% blocktrans %}Sign in{% endblocktrans %}</button>
+      </form>
+
+    </div> <!-- /container -->
+  </body>
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</html>

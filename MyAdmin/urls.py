@@ -4,10 +4,12 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'MyAdmin.views.home', name='home'),
-    # url(r'^MyAdmin/', include('MyAdmin.foo.urls')),
+urlpatterns = patterns(
+    '',
+    url(r'^login/$', 'main.views.page_login', name='login'),
+    url(r'^logout/$', 'main.views.page_logout', name='logout'),
+
+    url(r'^$', 'main.views.page_home', name='home'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
