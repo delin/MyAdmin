@@ -90,18 +90,17 @@ SECRET_KEY = 'l!r#no8szd@ant9&_l3%!$xntzk49-(%f7&3c)gx3zn)=tv26!'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
     'django.core.context_processors.request',
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages"
+    'django.contrib.messages.context_processors.messages'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -170,3 +169,11 @@ LOGGING = {
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/login/"
 LOGOUT_URL = "/logout/"
+
+APP_CONFIGS = {
+    'name': "MyAdmin",
+    'version': "0.01",
+    'year': 2013,
+    'author': "Delin",
+    'author_email': "delin@delin.pro",
+}

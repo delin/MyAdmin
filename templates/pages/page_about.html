@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#navbar-about").addClass("active");
+        });
+    </script>
+    <p>
+        {% blocktrans %}Panel for linux servers and lazy admins.{% endblocktrans %}
+    </p>
+    Under development:<br>
+    <a href="https://redmine.delin.pro/projects/myadmin" target="_blank">Issues on Redmine</a><br>
+    <a href="https://github.com/delin/MyAdmin" target="_blank">Project on GitHub</a>
+{% endblock %}

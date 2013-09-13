@@ -3,9 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.shortcuts import render, redirect
+from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from django.utils.translation import ugettext as _
+from MyAdmin.functions import prepare_data
 
 
 @csrf_protect
@@ -47,9 +49,9 @@ def page_login(request):
 
         return redirect('login', permanent=False)
 
-    messages.error(request, _("Wrong username or password."))
     return render(request, 'pages/page_login.html', {
         'page_title': page_title,
+        'data': prepare_data(request),
         'content': content
     })
 
@@ -69,5 +71,39 @@ def page_home(request):
 
     return render(request, "pages/page_home.html", {
         'page_title': page_title,
+        'data': prepare_data(request),
         'content': content,
+    })
+
+
+@login_required
+@require_http_methods(["GET"])
+def page_about(request):
+    page_title = _("About")
+
+    return render(request, "pages/page_about.html", {
+        'page_title': page_title,
+        'data': prepare_data(request),
+    })
+
+
+@login_required
+@require_http_methods(["GET"])
+def page_modules(request):
+    page_title = _("Modules")
+
+    return render(request, "pages/page_modules.html", {
+        'page_title': page_title,
+        'data': prepare_data(request),
+    })
+
+
+@login_required
+@require_http_methods(["GET"])
+def page_logs(request):
+    page_title = _("Logs")
+
+    return render(request, "pages/page_logs.html", {
+        'page_title': page_title,
+        'data': prepare_data(request),
     })

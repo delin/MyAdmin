@@ -2,5 +2,20 @@
 {% load i18n %}
 
 {% block content %}
-
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#navbar-home").addClass("active");
+        });
+    </script>
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Hello, world!</h1>
+            <p>
+                {% blocktrans %}Panel for linux servers and lazy admins.{% endblocktrans %}<br>
+                <a href="https://redmine.delin.pro/projects/myadmin" target="_blank">Issues on Redmine</a><br>
+                <a href="https://github.com/delin/MyAdmin" target="_blank">Project on GitHub</a>
+            </p>
+            <p><a class="btn btn-primary btn-lg" href="{% url 'about' %}">{% trans "About" %}</a></p>
+        </div>
+    </div>
 {% endblock %}

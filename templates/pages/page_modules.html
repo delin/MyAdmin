@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#navbar-modules").addClass("active");
+        });
+    </script>
+
+    {% if data.modules %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Author" %}</th>
+                <th>{% trans "Version" %}</th>
+                <th>{% blocktrans %}Installed at{% endblocktrans %}</th>
+                <th>{% blocktrans %}In menu{% endblocktrans %}</th>
+                <th>{% trans "Status" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    {% else %}
+        <div class="alert alert-warning"><strong>{% trans "Warning!" %}</strong> {% blocktrans %}Modules not installed.{% endblocktrans %}</div>
+    {% endif %}
+{% endblock %}

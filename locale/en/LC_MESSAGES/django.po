@@ -1,0 +1,110 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-09-13 23:27+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main/models.py:6
+msgid "Name"
+msgstr ""
+
+#: main/models.py:9
+msgid "Settings"
+msgstr ""
+
+#: main/models.py:10
+msgid "Setting"
+msgstr ""
+
+#: main/views.py:19
+msgid "Sign In"
+msgstr ""
+
+#: main/views.py:46
+msgid "This account disabled."
+msgstr ""
+
+#: main/views.py:48
+msgid "Wrong username or password."
+msgstr ""
+
+#: main/views.py:68 templates/base.html:41
+msgid "Home"
+msgstr ""
+
+#: main/views.py:82 templates/base.html:43 templates/pages/page_home.html:18
+msgid "About"
+msgstr ""
+
+#: main/views.py:93 templates/base.html:42
+msgid "Modules"
+msgstr ""
+
+#: templates/base.html:45
+msgid "Signed in as"
+msgstr ""
+
+#: templates/base.html:47
+msgid "Sign out"
+msgstr ""
+
+#: templates/base.html:57
+msgid "Toggle nav"
+msgstr ""
+
+#: templates/pages/page_about.html:11 templates/pages/page_home.html:14
+msgid "Panel for linux servers and lazy admins."
+msgstr ""
+
+#: templates/pages/page_login.html:38
+msgid "Please sign in"
+msgstr ""
+
+#: templates/pages/page_login.html:39
+msgid "Username"
+msgstr ""
+
+#: templates/pages/page_login.html:40
+msgid "Password"
+msgstr ""
+
+#: templates/pages/page_login.html:44
+msgid "Sign in"
+msgstr ""
+
+#: templates/pages/page_modules.html:35
+msgid "Warning!"
+msgstr ""
+
+#: templates/pages/page_modules.html:35
+msgid "Modules not installed."
+msgstr ""
+
+#: templates/pages/page_modules.html:18
+msgid "Installed at"
+msgstr ""
+#: templates/pages/page_modules.html:17
+msgid "Author"
+msgstr ""
+#: templates/pages/page_modules.html:19
+msgid "In menu"
+msgstr ""
+#: templates/pages/page_modules.html:20
+msgid "Status"
+msgstr ""
+#: templates/base.html:69
+msgid "Logs"
+msgstr ""
