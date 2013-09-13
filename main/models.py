@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 
 
 class Module(models.Model):
-    name = models.CharField(verbose_name=_("Name"), max_length=128)
+    name = models.CharField(verbose_name=_("Name"), max_length=32)
     author = models.CharField(verbose_name=_("Author"), max_length=512, null=True, blank=True)
     author_email = models.CharField(verbose_name=_("Author email"), max_length=512, null=True, blank=True)
     home_page = models.CharField(verbose_name=_("Home page"), max_length=1024, null=True, blank=True)

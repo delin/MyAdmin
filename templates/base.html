@@ -67,9 +67,13 @@
                     <div class="well sidebar-nav">
                         <ul class="nav">
                             <li>Modules</li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
+                            {% for module in data.modules %}
+                                {% if module.in_menu %}
+                                <li><a href="#">{{ module.name }}</a></li>
+                                {% endif %}
+                            {% empty %}
+                                <li><span class="label label-info">{% blocktrans %}No modules are installed{% endblocktrans %}</span></li>
+                            {% endfor %}
                         </ul>
                     </div><!--/.well -->
                 </div><!--/span-->

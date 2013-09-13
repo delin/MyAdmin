@@ -22,18 +22,20 @@
             </tr>
         </thead>
         <tbody>
+            {% for module in data.modules %}
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ module.name }}</td>
+                <td>{{ module.author }}</td>
+                <td>{{ module.version }}</td>
+                <td>{{ module.installed_at }}</td>
+                <td>{{ module.in_menu|yesno }}</td>
+                <td>{{ module.is_enabled|yesno }}</td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
     {% else %}
-        <div class="alert alert-warning"><strong>{% trans "Warning" %}!</strong> {% blocktrans %}Modules not installed.{% endblocktrans %}</div>
+        <div class="alert alert-warning"><strong>{% trans "Warning" %}!</strong> {% blocktrans %}No modules are installed{% endblocktrans %}.</div>
     {% endif %}
 {% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-14 00:11+0400\n"
+"POT-Creation-Date: 2013-09-14 00:22+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,6 +139,10 @@ msgstr "Выйти"
 msgid "Toggle nav"
 msgstr "Показать меню"
 
+#: templates/base.html:75 templates/pages/page_modules.html:37
+msgid "No modules are installed"
+msgstr "Нет установленных модулей"
+
 #: templates/pages/page_about.html:11 templates/pages/page_home.html:14
 msgid "Panel for linux servers and lazy admins."
 msgstr "Панель для серверов с linux и ленивых админов."
@@ -174,7 +178,3 @@ msgstr "Статус"
 #: templates/pages/page_modules.html:37
 msgid "Warning"
 msgstr "Внимание"
-
-#: templates/pages/page_modules.html:37
-msgid "Modules not installed."
-msgstr "Модули не установлены"
