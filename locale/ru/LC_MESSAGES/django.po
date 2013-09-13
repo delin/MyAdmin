@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-13 23:27+0400\n"
+"POT-Creation-Date: 2013-09-14 00:11+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,94 +19,162 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: main/models.py:6
+#: main/models.py:7 templates/pages/page_modules.html:16
 msgid "Name"
-msgstr ""
+msgstr "Название"
+
+#: main/models.py:8 templates/pages/page_modules.html:17
+msgid "Author"
+msgstr "Автор"
 
 #: main/models.py:9
-msgid "Settings"
-msgstr ""
+msgid "Author email"
+msgstr "Почта автора"
 
 #: main/models.py:10
-msgid "Setting"
-msgstr ""
+msgid "Home page"
+msgstr "Главная страница"
+
+#: main/models.py:11
+msgid "Description"
+msgstr "Описание"
+
+#: main/models.py:12 templates/pages/page_modules.html:18
+msgid "Version"
+msgstr "Версия"
+
+#: main/models.py:13
+msgid "In Menu"
+msgstr "В меню"
+
+#: main/models.py:14
+msgid "Enabled"
+msgstr "Включено"
+
+#: main/models.py:15
+msgid "Removed"
+msgstr "Удалено"
+
+#: main/models.py:16
+msgid "Date of Creation"
+msgstr "Дата создания"
+
+#: main/models.py:17
+msgid "Date of Update"
+msgstr "Дата обновления"
+
+#: main/models.py:20 main/views.py:93 templates/base.html:42
+msgid "Modules"
+msgstr "Модули"
+
+#: main/models.py:21
+msgid "Module"
+msgstr "Модуль"
+
+#: main/models.py:29
+msgid "Module add"
+msgstr "Модуль добавлен"
+
+#: main/models.py:30
+msgid "Module update"
+msgstr "Обновлена информация по модулю"
+
+#: main/models.py:31
+msgid "Module upgrade"
+msgstr "Модуль обновлён"
+
+#: main/models.py:32
+msgid "Module remove"
+msgstr "Модуль удалён"
+
+#: main/models.py:35 templates/pages/page_logs.html:15
+msgid "Date and time"
+msgstr "Дата и время"
+
+#: main/models.py:36 templates/pages/page_logs.html:16
+msgid "Action"
+msgstr "Действие"
+
+#: main/models.py:37 templates/pages/page_logs.html:17
+msgid "User"
+msgstr "Пользователь"
+
+#: main/models.py:40 main/views.py:104 templates/base.html:43
+msgid "Logs"
+msgstr "Логи"
+
+#: main/models.py:41
+msgid "Log"
+msgstr "Лог"
 
 #: main/views.py:19
 msgid "Sign In"
-msgstr ""
+msgstr "Войти"
 
 #: main/views.py:46
 msgid "This account disabled."
-msgstr ""
+msgstr "Этот аккаунт отключен."
 
 #: main/views.py:48
 msgid "Wrong username or password."
-msgstr ""
+msgstr "Ошибочный логин или пароль."
 
 #: main/views.py:68 templates/base.html:41
 msgid "Home"
-msgstr ""
+msgstr "Домашняя"
 
-#: main/views.py:82 templates/base.html:43 templates/pages/page_home.html:18
+#: main/views.py:82 templates/base.html:44 templates/pages/page_home.html:18
 msgid "About"
-msgstr ""
-
-#: main/views.py:93 templates/base.html:42
-msgid "Modules"
-msgstr ""
-
-#: templates/base.html:45
-msgid "Signed in as"
-msgstr ""
+msgstr "О проекте"
 
 #: templates/base.html:47
-msgid "Sign out"
-msgstr ""
+msgid "Signed in as"
+msgstr "Вошли как"
 
-#: templates/base.html:57
+#: templates/base.html:49
+msgid "Sign out"
+msgstr "Выйти"
+
+#: templates/base.html:59
 msgid "Toggle nav"
-msgstr ""
+msgstr "Показать меню"
 
 #: templates/pages/page_about.html:11 templates/pages/page_home.html:14
 msgid "Panel for linux servers and lazy admins."
-msgstr ""
+msgstr "Панель для серверов с linux и ленивых админов."
 
 #: templates/pages/page_login.html:38
 msgid "Please sign in"
-msgstr ""
+msgstr "Пожалуйста войдите"
 
 #: templates/pages/page_login.html:39
 msgid "Username"
-msgstr ""
+msgstr "Имя пользователя"
 
 #: templates/pages/page_login.html:40
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 #: templates/pages/page_login.html:44
 msgid "Sign in"
-msgstr ""
+msgstr "Войти"
 
-#: templates/pages/page_modules.html:35
-msgid "Warning!"
-msgstr ""
-
-#: templates/pages/page_modules.html:35
-msgid "Modules not installed."
-msgstr ""
-
-#: templates/pages/page_modules.html:18
-msgid "Installed at"
-msgstr ""
-#: templates/pages/page_modules.html:17
-msgid "Author"
-msgstr ""
 #: templates/pages/page_modules.html:19
-msgid "In menu"
-msgstr ""
+msgid "Installed at"
+msgstr "Установлено на"
+
 #: templates/pages/page_modules.html:20
+msgid "In menu"
+msgstr "В меню"
+
+#: templates/pages/page_modules.html:21
 msgid "Status"
-msgstr ""
-#: templates/base.html:69
-msgid "Logs"
-msgstr ""
+msgstr "Статус"
+
+#: templates/pages/page_modules.html:37
+msgid "Warning"
+msgstr "Внимание"
+
+#: templates/pages/page_modules.html:37
+msgid "Modules not installed."
+msgstr "Модули не установлены"
