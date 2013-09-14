@@ -13,7 +13,7 @@ def modules_urlpattern():
         urlpatterns += patterns(
             '',
             url(r'^module/' + cur_module.app_name + '/',
-                include(module + '.urls', namespace=cur_module.app_name, app_name=cur_module.app_name)),
+                include(module + '.urls', app_name=cur_module.app_name)),
         )
 
     return urlpatterns

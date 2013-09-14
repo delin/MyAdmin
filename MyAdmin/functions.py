@@ -16,7 +16,7 @@ def prepare_data(request):
         modules.append({
             'name': module.name,
             'app_name': module.app_name,
-            'main_page': reverse(module.app_name + ":" + module.main_page),
+            'main_page': reverse("module-" + module.app_name + "_" + module.main_page),
             'author': module.author,
             'author_email': module.author_email,
             'version': module.version,

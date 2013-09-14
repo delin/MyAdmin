@@ -178,3 +178,6 @@ msgstr "Статус"
 #: templates/pages/page_modules.html:37
 msgid "Warning"
 msgstr "Внимание"
+#: modules/ftp/templates/main.html:13
+msgid "Current settings"
+msgstr ""
