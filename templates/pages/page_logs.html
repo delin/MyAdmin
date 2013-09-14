@@ -18,12 +18,12 @@
             </tr>
         </thead>
         <tbody>
-            {% for log in content.logs %}
+            {% for log in logs %}
             <tr>
                 <td>{{ forloop.revcounter }}</td>
                 <td>{{ log.date }}</td>
                 <td>{{ log.get_action_display }}</td>
-                <td>{{ log.user.username|default:"<span class='muted'>---</span>" }}</td>
+                <td>{{ log.user.get_full_name|default:log.user.username }}</td>
             </tr>
             {% endfor %}
         </tbody>

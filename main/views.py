@@ -3,11 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.shortcuts import render, redirect
-from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from django.utils.translation import ugettext as _
-from MyAdmin.functions import prepare_data
+from MyAdmin.functions import prepare_data, modules_update
+from main.models import Log
 
 
 @csrf_protect
@@ -89,21 +89,35 @@ def page_about(request):
 
 @login_required
 @require_http_methods(["GET"])
-def page_modules(request):
-    page_title = _("Modules")
+def page_logs(request):
+    page_title = _("Logs")
 
-    return render(request, "pages/page_modules.html", {
+    logs = Log.objects.all()
+
+    return render(request, "pages/page_logs.html", {
         'page_title': page_title,
         'data': prepare_data(request),
+        'logs': logs,
     })
 
 
 @login_required
-@require_http_methods(["GET"])
-def page_logs(request):
-    page_title = _("Logs")
+@require_http_methods(["GET", "POST"])
+def page_modules(request):
+    page_title = _("Modules")
 
-    return render(request, "pages/page_logs.html", {
+    if request.method == "POST":
+        if 'update' in request.POST:
+            new_modules = modules_update(request)
+
+            if new_modules > 0:
+                messages.success(request, str(new_modules) + " " + _("Module is installed"))
+            else:
+                messages.info(request, _("No new modules"))
+
+        return redirect('modules')
+
+    return render(request, "pages/page_modules.html", {
         'page_title': page_title,
         'data': prepare_data(request),
     })

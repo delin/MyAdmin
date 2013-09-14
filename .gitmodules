@@ -1,0 +1,3 @@
+[submodule "modules/ftp"]
+	path = modules/ftp
+	url = git@github.com:delin/MyAdmin-FTP.git

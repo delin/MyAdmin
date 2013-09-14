@@ -4,17 +4,18 @@ from django.utils.translation import ugettext as _
 
 
 class Module(models.Model):
-    name = models.CharField(verbose_name=_("Name"), max_length=32)
+    name = models.CharField(verbose_name=_("Name"), max_length=32, unique=True)
+    app_name = models.CharField(verbose_name=_("App name"), max_length=256)
+    version = models.PositiveIntegerField(verbose_name=_("Version"), default=1)
+    main_page = models.CharField(verbose_name=_("Main page"), max_length=1024, default='main')
     author = models.CharField(verbose_name=_("Author"), max_length=512, null=True, blank=True)
     author_email = models.CharField(verbose_name=_("Author email"), max_length=512, null=True, blank=True)
-    home_page = models.CharField(verbose_name=_("Home page"), max_length=1024, null=True, blank=True)
+    home_page = models.URLField(verbose_name=_("Home page"), max_length=1024, null=True, blank=True)
     description = models.TextField(verbose_name=_('Description'), max_length=4000, blank=True, null=True)
-    version = models.PositiveIntegerField(verbose_name=_("Version"), default=1)
     in_menu = models.BooleanField(verbose_name=_("In Menu"), default=True)
     is_enabled = models.BooleanField(verbose_name=_("Enabled"), default=True)
-    is_removed = models.BooleanField(verbose_name=_("Removed"), default=False)
     installed_at = models.DateTimeField(verbose_name=_("Date of Creation"), auto_now_add=True)
-    update_at = models.DateTimeField(verbose_name=_("Date of Update"), auto_now=True)
+    update_at = models.DateTimeField(verbose_name=_("Date of Update"), auto_now_add=True, auto_now=True)
 
     class Meta:
         verbose_name_plural = _('Modules')

@@ -8,6 +8,11 @@
         });
     </script>
 
+    <form action="{% url 'modules' %}" method="post" name="modules_update">{% csrf_token %}
+        <p>
+            <button name="update" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span> Update modules</button>
+        </p>
+    </form>
     {% if data.modules %}
     <table class="table">
         <thead>
@@ -18,15 +23,15 @@
                 <th>{% trans "Version" %}</th>
                 <th>{% blocktrans %}Installed at{% endblocktrans %}</th>
                 <th>{% blocktrans %}In menu{% endblocktrans %}</th>
-                <th>{% trans "Status" %}</th>
+                <th>{% trans "Is active" %}</th>
             </tr>
         </thead>
         <tbody>
             {% for module in data.modules %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ module.name }}</td>
-                <td>{{ module.author }}</td>
+                <td><a href="{{ module.main_page }}">{{ module.name }}</a></td>
+                <td><a href="mailto:{{ module.author_email }}" target="_blank">{{ module.author }}</a></td>
                 <td>{{ module.version }}</td>
                 <td>{{ module.installed_at }}</td>
                 <td>{{ module.in_menu|yesno }}</td>

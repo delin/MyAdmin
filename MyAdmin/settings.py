@@ -177,3 +177,9 @@ APP_CONFIGS = {
     'author': "Delin",
     'author_email': "delin@delin.pro",
 }
+
+
+INSTALLED_MODULES = (
+    'modules.ftp',
+)
+INSTALLED_APPS += INSTALLED_MODULES

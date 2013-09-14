@@ -59,6 +59,14 @@
                         <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">{% blocktrans %}Toggle nav{% endblocktrans %}</button>
                     </p>
                     <div class="row">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% ifequal message.tags "error" %}alert-danger{% else %}alert-{{ message.tags }}{% endifequal %}">
+                                    <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+                                    <strong>{% if message.tags %}{{ message.tags|capfirst }}!{% endif %}</strong> {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                         {% block content %}{% endblock %}
                     </div><!--/row-->
                 </div><!--/span-->
@@ -69,7 +77,7 @@
                             <li>Modules</li>
                             {% for module in data.modules %}
                                 {% if module.in_menu %}
-                                <li><a href="#">{{ module.name }}</a></li>
+                                <li id="navlist_module-{{ module.app_name }}"><a href="{{ module.main_page }}">{{ module.name }}</a></li>
                                 {% endif %}
                             {% empty %}
                                 <li><span class="label label-info">{% blocktrans %}No modules are installed{% endblocktrans %}</span></li>
