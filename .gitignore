@@ -5,3 +5,4 @@
 *.sqlite
 *.tmp
 local_settings.py
+module/nginx
