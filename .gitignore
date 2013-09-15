@@ -3,6 +3,7 @@
 *.pot
 *.pyc
 *.sqlite
+*.sqlite3
 *.tmp
 local_settings.py
 module/nginx
