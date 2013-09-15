@@ -180,6 +180,6 @@ APP_CONFIGS = {
 
 
 INSTALLED_MODULES = (
-    'modules.ftp',
+    'modules.vsftpd',
 )
 INSTALLED_APPS += INSTALLED_MODULES

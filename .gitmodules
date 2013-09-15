@@ -4,3 +4,6 @@
 [submodule "MyAdmin-Modules"]
 	path = MyAdmin-Modules
 	url = git@github.com:delin/MyAdmin-Modules.git
+[submodule "modules"]
+	path = modules
+	url = git@github.com:delin/MyAdmin-Modules.git
