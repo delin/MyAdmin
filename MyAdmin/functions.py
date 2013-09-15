@@ -43,7 +43,7 @@ def modules_update(request):
         try:
             module = import_module(module_in_list).myadmin_module
 
-            if installed_modules_count == 0 or module.name not in installed_modules[0]:
+            if installed_modules_count == 0 or module.name not in installed_modules[0] and not module.not_installable:
                     Module(
                         name=module.name,
                         app_name=module.app_name,
