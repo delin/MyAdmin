@@ -172,7 +172,7 @@ LOGOUT_URL = "/logout/"
 
 APP_CONFIGS = {
     'name': "MyAdmin",
-    'version': "0.01",
+    'version': "0.1",
     'year': 2013,
     'author': "Delin",
     'author_email': "delin@delin.pro",
