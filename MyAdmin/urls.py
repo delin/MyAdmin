@@ -18,6 +18,7 @@ urlpatterns = patterns(
     url(r'^user/add/$', 'main.views.page_user_add', name='user_add'),
     url(r'^user/group/add/$', 'main.views.page_user_group_add', name='user_group_add'),
     url(r'^user/(?P<user_uid>\d+)/$', 'main.views.page_user_view', name='user_view'),
+    url(r'^user/(?P<user_uid>\d+)/edit$', 'main.views.page_user_edit', name='user_edit'),
 
     url(r'^logs/$', 'main.views.page_logs', name='logs'),
     url(r'^logs/(?P<log_id>\d+)/$', 'main.views.page_log_view', name='log_view'),

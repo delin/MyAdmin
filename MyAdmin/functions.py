@@ -7,6 +7,7 @@ from django.utils.importlib import import_module
 import grp
 import pwd
 from MyAdmin.settings import APP_CONFIGS, INSTALLED_MODULES
+from MyAdmin.system_info import SystemInfo
 from main.models import Module, Log
 
 __author__ = 'delin'
@@ -30,9 +31,11 @@ def prepare_data(request):
             'is_enabled': module.is_enabled,
         })
 
+    sys_info = SystemInfo()
     data = {
         'app': APP_CONFIGS,
         'modules': modules,
+        'load_avg': sys_info.get_load_avg(),
     }
 
     return data
@@ -124,6 +127,35 @@ def get_system_groups():
     return user_groups
 
 
+def get_user_info(login=None, uid=None):
+    if login:
+        user = pwd.getpwnam(login)
+    elif uid:
+        user = pwd.getpwuid(int(uid))
+    else:
+        return False
+
+    if not user:
+        return False
+
+    all_groups = get_system_groups()
+    user_groups = []
+    for group in all_groups:
+        if user[0] in group['members']:
+            user_groups.append(group)
+
+    return {
+        'name': user[0],
+        'uid': int(user[2]),
+        'gid': int(user[3]),
+        'group': grp.getgrgid(int(user[3]))[0],
+        'comment': user[4],
+        'groups': user_groups,
+        'home_dir': user[5],
+        'shell': user[6],
+    }
+
+
 def system_cmd(cmd, request=None):
     user = None
     exit_code = -1
@@ -131,6 +163,7 @@ def system_cmd(cmd, request=None):
     if request:
         user = request.user
 
+    print cmd
     try:
         exit_code = os.WEXITSTATUS(os.system(cmd))
         Log(

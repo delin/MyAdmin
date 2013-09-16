@@ -207,3 +207,30 @@ msgstr ""
 #: templates/pages/page_user_add.html:85
 msgid "The name of the user's login shell."
 msgstr ""
+#: templates/pages/page_user_view.html:34
+msgid "Delete user"
+msgstr ""
+#: templates/pages/page_user_view.html:39
+msgid "Remove home dir"
+msgstr ""
+#: templates/pages/page_user_view.html:44
+msgid "I know what I'm doing"
+msgstr ""
+#: templates/pages/page_user_view.html:48
+msgid "Delete"
+msgstr ""
+#: templates/pages/page_user_view.html:47
+msgid "Close"
+msgstr ""
+#: templates/pages/page_user_view.html:37
+msgid "Delete a user:"
+msgstr ""
+#: templates/pages/page_user_view.html:15
+msgid "New Password"
+msgstr ""
+#: templates/pages/page_user_view.html:20
+msgid "Repeat Password"
+msgstr ""
+#: templates/base.html:78
+msgid "System information"
+msgstr ""

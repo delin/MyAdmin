@@ -2,21 +2,97 @@
 {% load i18n %}
 
 {% block content %}
+    <div class="modal fade" id="change_pass" tabindex="-1" role="dialog" aria-labelledby="change_passLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-warning">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{% blocktrans %}Change password for user:{% endblocktrans %} <strong>{{ user_info.name }}</strong></h4>
+                </div>
+                <form action="{% url 'user_edit' user_uid %}" method="post">{% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="new_password">{% blocktrans %}New Password{% endblocktrans %}</label>
+                            <input type="password" class="form-control" name="new_password" id="new_password" placeholder="{% trans "Password" %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="repeat_password">{% blocktrans %}Repeat Password{% endblocktrans %}</label>
+                            <input type="password" class="form-control" name="repeat_password" id="repeat_password" placeholder="{% trans "Repeat Password" %}" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                        <button type="submit" class="btn btn-warning" id="btn-changepass" name="btn-changepass">{% trans "Change" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="user_del" tabindex="-1" role="dialog" aria-labelledby="user_delLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-danger">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{% blocktrans %}Delete user:{% endblocktrans %} <strong>{{ user_info.name }}</strong></h4>
+                </div>
+                <form action="{% url 'user_edit' user_uid %}" method="post">{% csrf_token %}
+                    <div class="modal-body">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="userdel_force"> {% blocktrans %}Force{% endblocktrans %}
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="userdel_remove_home"> {% blocktrans %}Remove home dir{% endblocktrans %}
+                            </label>
+                        </div>
+                        <hr>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="i_know_what_i_am_doing" required> {% blocktrans %}I know what I'm doing{% endblocktrans %}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                        <button type="submit" class="btn btn-danger disabled" id="btn-userdel" name="btn-userdel">{% trans "Delete" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <a data-toggle="modal" href="#change_pass" class="btn btn-default">{% blocktrans %}Change password{% endblocktrans %}</a>
+        <a data-toggle="modal" href="#user_del" class="btn btn-danger">{% blocktrans %}Delete user{% endblocktrans %}</a>
+    </div>
     <dl class="dl-horizontal">
         <dt>{% blocktrans %}Login{% endblocktrans %}</dt>
-        <dd>{{ user_view.0 }}</dd>
+        <dd>{{ user_info.name }}</dd>
         <dt>{% blocktrans %}Group{% endblocktrans %}</dt>
-        <dd>{{ user_group }}</dd>
+        <dd>{{ user_info.group }}</dd>
         <dt>{% blocktrans %}Groups{% endblocktrans %}</dt>
-        <dd>{% for group in user_groups %}{{ group }}, {% endfor %}
+        <dd>{% for group in user_info.groups %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
         </dd>
         <dt>{% blocktrans %}UID{% endblocktrans %}</dt>
-        <dd>{{ user_view.2 }}</dd>
+        <dd>{{ user_info.uid }}</dd>
         <dt>{% blocktrans %}GID{% endblocktrans %}</dt>
-        <dd>{{ user_view.3 }}</dd>
+        <dd>{{ user_info.gid }}</dd>
         <dt>{% blocktrans %}Home dir{% endblocktrans %}</dt>
-        <dd>{{ user_view.5 }}</dd>
+        <dd>{{ user_info.home_dir }}</dd>
         <dt>{% blocktrans %}Shell{% endblocktrans %}</dt>
-        <dd>{{ user_view.6 }}</dd>
+        <dd>{{ user_info.shell }}</dd>
     </dl>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("input[name='i_know_what_i_am_doing']").click(function() {
+                $('#btn-userdel').toggleClass('disabled');
+            });
+        });
+    </script>
 {% endblock %}

@@ -72,6 +72,28 @@
                     </div><!--/row-->
                 </div><!--/span-->
                 <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+                    <div class="sidebar-nav">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{% blocktrans %}System information{% endblocktrans %}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <strong>OS:</strong> {{ system_info.os_name }}<br>
+                                <strong>Hostname:</strong> {{ system_info.hostname }}<br>
+                                <strong>Kernel version:</strong> {{ system_info.kernel_version }} <br>
+                                <strong>Load Average:</strong>
+                                {% for load in data.load_avg %}
+                                <span class="
+                                {% if load <= 0 %}text-success
+                                {% elif load > 1 %}text-info
+                                {% elif load > 3 %}text-danger
+                                {% elif load > 4 %}text-danger
+                                {% endif %}">
+                                    {{ load }}
+                                </span>{% endfor %}
+                            </div>
+                        </div>
+                    </div>
                     <div class="well sidebar-nav">
                         <ul class="nav">
                             <li>Modules</li>

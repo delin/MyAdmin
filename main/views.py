@@ -1,17 +1,14 @@
 import os
-import subprocess
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.shortcuts import render, redirect
-from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from django.utils.translation import ugettext as _
-import pwd
-import grp
-from MyAdmin.functions import prepare_data, modules_update, get_system_users, get_system_groups, replace_in_file
+from MyAdmin.functions import prepare_data, modules_update, get_system_users, get_system_groups, replace_in_file, get_user_info, system_cmd
+from MyAdmin.system_info import SystemInfo
 from main.models import Log
 
 
@@ -73,11 +70,13 @@ def page_home(request):
     page_title = _("Home")
 
     content = {}
+    system_info = SystemInfo()
 
     return render(request, "pages/page_home.html", {
         'page_title': page_title,
         'data': prepare_data(request),
         'content': content,
+        'system_info': system_info.get_summary_info(),
     })
 
 
@@ -280,25 +279,85 @@ def page_user_add(request):
 
 
 @login_required
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def page_user_view(request, user_uid=0):
     page_title = _("User view")
 
-    user_view = pwd.getpwuid(int(user_uid))
-    if not user_view:
+    c = {}
+    c.update(csrf(request))
+
+    user_info = get_user_info(uid=user_uid)
+    if not user_info:
         messages.error(request, _("User not exist"))
         return redirect('users')
-
-    user_group = grp.getgrgid(user_view[3])
-    user_groups = user_group
 
     return render(request, "pages/page_user_view.html", {
         'page_title': page_title,
         'data': prepare_data(request),
-        'user_view': user_view,
-        'user_group': user_group[0],
-        'user_groups': user_groups,
+        'user_uid': user_uid,
+        'user_info': user_info,
     })
+
+
+@login_required
+@require_http_methods(["POST"])
+def page_user_edit(request, user_uid=0):
+    c = {}
+    c.update(csrf(request))
+
+    user_info = get_user_info(uid=user_uid)
+    if not user_info:
+        messages.error(request, _("User not exist"))
+        return redirect('users')
+
+    if "btn-changepass" and "new_password" and "repeat_password" in request.POST:
+        if request.POST.get("new_password") == request.POST.get("repeat_password"):
+            password = request.POST.get("new_password")
+            passwd_string = "echo -e \"%s\\n%s\" | passwd %s" % (password, password, user_info['name'])
+
+            exit_code = system_cmd(passwd_string, request=request)
+            if exit_code == 0:
+                messages.success(request, _("Password changed"))
+            else:
+                messages.error(request, _("User not removed, see logs for more info"))
+        else:
+            messages.error(request, _("Passwords not match"))
+
+        return redirect('user_view', user_uid=user_uid)
+    elif "btn-userdel" and "i_know_what_i_am_doing" in request.POST:
+        if user_info['name'] == 'root':
+            messages.error(request, _("You're crazy, I will not do it!"))
+            return redirect('users')
+
+        options = ""
+        if request.POST.get("userdel_remove_home"):
+            options += " -r"
+        if request.POST.get("userdel_force"):
+            options += " -f"
+
+        if get_user_info(uid=user_uid):
+            os_string = "userdel %s %s" % (options, user_info['name'])
+            exit_code = system_cmd(os_string, request=request)
+            if exit_code == 0:
+                messages.success(request, _("User removed"))
+            elif exit_code == 1:
+                messages.error(request, _("Can't update password file"))
+            elif exit_code == 2:
+                messages.error(request, _("Invalid command syntax"))
+            elif exit_code == 6:
+                messages.error(request, _("Specified user doesn't exist"))
+            elif exit_code == 8:
+                messages.error(request, _("User currently logged in"))
+            elif exit_code == 10:
+                messages.error(request, _("Can't update group file"))
+            elif exit_code == 12:
+                messages.error(request, _("Can't remove home directory"))
+            else:
+                messages.error(request, _("User not removed, see logs for more info"))
+        else:
+            messages.error(request, _("User not exist"))
+
+    return redirect('users')
 
 
 @login_required
