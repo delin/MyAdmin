@@ -1,4 +1,6 @@
 from operator import itemgetter
+import os
+import re
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.importlib import import_module
@@ -120,3 +122,45 @@ def get_system_groups():
         })
 
     return user_groups
+
+
+def system_cmd(cmd, request=None):
+    user = None
+    exit_code = -1
+
+    if request:
+        user = request.user
+
+    try:
+        exit_code = os.WEXITSTATUS(os.system(cmd))
+        Log(
+            action=4,
+            user=user,
+            os_system=cmd,
+            os_system_code=exit_code,
+        ).save()
+    except BaseException as e:
+        Log(
+            action=4,
+            user=user,
+            os_system=cmd,
+            os_system_code=exit_code,
+        ).save()
+
+    return exit_code
+
+
+def replace_in_file(file_name, pattern, replace_text):
+    data = open(file_name).read()
+    text = re.sub(pattern, replace_text, data)
+
+    fd_w = open(file_name, 'w')
+    fd_w.write(text)
+    fd_w.close()
+    return True
+
+
+def service_reload(name, request=None):
+    if system_cmd("systemctl reload %s" % name, request) == 0:
+        return True
+    return False

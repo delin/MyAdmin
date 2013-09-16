@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <dl class="dl-horizontal">
+        <dt>{% blocktrans %}Login{% endblocktrans %}</dt>
+        <dd>{{ user_view.0 }}</dd>
+        <dt>{% blocktrans %}Group{% endblocktrans %}</dt>
+        <dd>{{ user_group }}</dd>
+        <dt>{% blocktrans %}Groups{% endblocktrans %}</dt>
+        <dd>{% for group in user_groups %}{{ group }}, {% endfor %}
+        </dd>
+        <dt>{% blocktrans %}UID{% endblocktrans %}</dt>
+        <dd>{{ user_view.2 }}</dd>
+        <dt>{% blocktrans %}GID{% endblocktrans %}</dt>
+        <dd>{{ user_view.3 }}</dd>
+        <dt>{% blocktrans %}Home dir{% endblocktrans %}</dt>
+        <dd>{{ user_view.5 }}</dd>
+        <dt>{% blocktrans %}Shell{% endblocktrans %}</dt>
+        <dd>{{ user_view.6 }}</dd>
+    </dl>
+{% endblock %}

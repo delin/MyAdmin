@@ -9,7 +9,9 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from django.utils.translation import ugettext as _
-from MyAdmin.functions import prepare_data, modules_update, get_system_users, get_system_groups
+import pwd
+import grp
+from MyAdmin.functions import prepare_data, modules_update, get_system_users, get_system_groups, replace_in_file
 from main.models import Log
 
 
@@ -275,6 +277,28 @@ def page_user_add(request):
             'groups': get_system_groups(),
             'shells': shells,
         })
+
+
+@login_required
+@require_http_methods(["GET"])
+def page_user_view(request, user_uid=0):
+    page_title = _("User view")
+
+    user_view = pwd.getpwuid(int(user_uid))
+    if not user_view:
+        messages.error(request, _("User not exist"))
+        return redirect('users')
+
+    user_group = grp.getgrgid(user_view[3])
+    user_groups = user_group
+
+    return render(request, "pages/page_user_view.html", {
+        'page_title': page_title,
+        'data': prepare_data(request),
+        'user_view': user_view,
+        'user_group': user_group[0],
+        'user_groups': user_groups,
+    })
 
 
 @login_required

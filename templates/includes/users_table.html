@@ -21,7 +21,7 @@
                 {% for user in users reversed %}
                 <tr>
                     <td>{{ forloop.revcounter }}</td>
-                    <td>{{ user.name }}</td>
+                    <td><a href="{% url 'user_view' user.uid %}">{{ user.name }}</a></td>
                     <td>{% for group in user.groups %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
                     <td>{{ user.home_dir }}</td>
                     <td>{{ user.shell }}</td>
