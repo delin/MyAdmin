@@ -13,7 +13,14 @@ urlpatterns = patterns(
     url(r'^logout/$', 'main.views.page_logout', name='logout'),
 
     url(r'^modules/$', 'main.views.page_modules', name='modules'),
+
+    url(r'^users/$', 'main.views.page_users', name='users'),
+    url(r'^user/add/$', 'main.views.page_user_add', name='user_add'),
+    url(r'^user/group/add/$', 'main.views.page_user_group_add', name='user_group_add'),
+
     url(r'^logs/$', 'main.views.page_logs', name='logs'),
+    url(r'^logs/(?P<log_id>\d+)/$', 'main.views.page_log_view', name='log_view'),
+
     url(r'^about/$', 'main.views.page_about', name='about'),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

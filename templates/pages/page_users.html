@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#navbar-users").addClass("active");
+        });
+    </script>
+
+    {% include "includes/users_table.html" %}
+{% endblock %}

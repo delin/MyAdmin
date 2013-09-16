@@ -180,3 +180,30 @@ msgstr ""
 #: modules/ftp/templates/main.html:13
 msgid "Current settings"
 msgstr ""
+#: modules/vsftpd/templates/main.html:24
+msgid "Group"
+msgstr ""
+#: modules/vsftpd/templates/main.html:25
+msgid "Home dir"
+msgstr ""
+#: modules/vsftpd/templates/main.html:26
+msgid "Shell"
+msgstr ""
+#: modules/vsftpd/templates/main.html:16
+msgid "Add User"
+msgstr ""
+#: modules/vsftpd/templates/main.html:17
+msgid "Add Group"
+msgstr ""
+#: templates/pages/page_user_add.html:28
+msgid "System user"
+msgstr ""
+#: templates/pages/page_user_add.html:13
+msgid "Login"
+msgstr ""
+#: templates/pages/page_user_add.html:35
+msgid "Create"
+msgstr ""
+#: templates/pages/page_user_add.html:85
+msgid "The name of the user's login shell."
+msgstr ""

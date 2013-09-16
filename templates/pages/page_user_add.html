@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#navbar-users").addClass("active");
+        });
+    </script>
+
+    <form class="form-horizontal" role="form" action="{% url 'user_add' %}" method="post">{% csrf_token %}
+        <div class="form-group">
+            <label for="input-login" class="col-lg-2 control-label">{% trans "Login" %}</label>
+            <div class="col-lg-10">
+                <input name="login" type="text" class="form-control" id="input-login" placeholder="{% trans "Login" %}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-password" class="col-lg-2 control-label">{% trans "Password" %}</label>
+            <div class="col-lg-10">
+                <input name="password" type="password" class="form-control" id="input-password" placeholder="{% trans "Password" %}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <div class="checkbox">
+                    <label>
+                        <input name="view_advanced" type="checkbox"> {% blocktrans %}Advanced settings{% endblocktrans %}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="div-advanced" class="hidden">
+            <hr>
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <div class="checkbox">
+                        <label>
+                            <input name="create_home" type="checkbox" checked> {% blocktrans %}Create home dir{% endblocktrans %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" id="group-home">
+                <label for="input-home" class="col-lg-2 control-label">{% trans "Home dir" %}</label>
+                <div class="col-lg-10">
+                    <input name="home_dir" type="text" class="form-control" id="input-home" placeholder="{% trans "Home dir" %}">
+                    <span class="help-block">{% blocktrans %}The new user will be created using HOME_DIR as the value for the user's login directory.{% endblocktrans %}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input-groups" class="col-lg-2 control-label">{% trans "Groups" %}</label>
+                <div class="col-lg-10">
+                    <select multiple class="form-control" size="6" name="select-groups">
+                        {% for group in groups %}
+                            <option value="{{ group.name }}">{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="help-block">{% blocktrans %}A list of supplementary groups which the user is also a member of.{% endblocktrans %}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <div class="checkbox">
+                        <label>
+                            <input name="create_user_group" type="checkbox"> {% blocktrans %}Create group with name of user{% endblocktrans %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <div class="checkbox">
+                        <label>
+                            <input name="set_other_shell" type="checkbox"> {% blocktrans %}Set other shell{% endblocktrans %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" id="group-shell">
+                <label for="input-shell" class="col-lg-2 control-label">{% trans "Shell" %}</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="select-shell" name="select-shell">
+                        {% for shell in shells %}
+                            <option value="{{ shell }}">{{ shell }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="help-block">{% blocktrans %}The name of the user's login shell.{% endblocktrans %}</span>
+                </div>
+            </div>
+            <div class="form-group hidden" id="group-other_shell">
+                <label for="input-shell" class="col-lg-2 control-label">{% trans "Other shell" %}</label>
+                <div class="col-lg-10">
+                    <input name="other_shell" type="text" class="form-control" id="input-other_shell" placeholder="{% trans "Other shell" %}">
+                    <span class="help-block">{% blocktrans %}The name of the user's login shell.{% endblocktrans %}</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="input-comment" class="col-lg-2 control-label">{% trans "Comment" %}</label>
+                <div class="col-lg-10">
+                    <input name="comment" type="text" class="form-control" id="input-comment" placeholder="{% trans "Comment" %}">
+                    <span class="help-block">{% blocktrans %}Any text string. It is generally a short description of the login, and is currently used as the field for the user's full name. {% endblocktrans %}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <div class="checkbox">
+                        <label>
+                            <input name="create_system_account" type="checkbox"> {% blocktrans %}Create a system account{% endblocktrans %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-primary">{% trans "Create" %}</button>
+                <button name="create_and_next" type="submit" class="btn btn-default">{% trans "Create and Next" %}</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/user_add.js' %}"></script>
+{% endblock %}

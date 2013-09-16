@@ -31,11 +31,15 @@ class Log(models.Model):
         (1, _('Module update')),
         (2, _('Module upgrade')),
         (3, _('Module remove')),
+        (4, _('Run command of system')),
+        (5, _('Set user password')),
     )
 
     date = models.DateTimeField(verbose_name=_("Date and time"), auto_now_add=True)
     action = models.PositiveSmallIntegerField(verbose_name=_("Action"), choices=ACTIONS)
     user = models.ForeignKey(User, verbose_name=_("User"), null=True, blank=True)
+    os_system = models.CharField(verbose_name=_("OS String executed"), max_length=4096, null=True, blank=True)
+    os_system_code = models.IntegerField(verbose_name=_("OS command exit code"), null=True, blank=True)
 
     class Meta:
         verbose_name_plural = _('Logs')
