@@ -343,8 +343,11 @@ def page_services(request):
 
 
 @login_required
-@require_http_methods(["POST"])
+@require_http_methods(["GET", "POST"])
 def page_service_action(request, service_name):
+    if request.method == "GET":
+        return redirect('services')
+
     if "prev_page" in request.POST:
         prev_page = request.POST.get("prev_page")
     else:

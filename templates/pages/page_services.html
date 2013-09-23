@@ -24,8 +24,12 @@
             {% for service in services %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ service.name|default:"---" }}</td>
-                <td>{{ service.status|yesno:"Started,Stopped,Unknown" }}</td>
+                <td><strong>{{ service.name|default:"---" }}</strong></td>
+                <td>{% if service.status %}
+                    <span class="label label-success">{% trans "Running" %}</span>{% else %}
+                    <span class="label label-warning">{% trans "Stopped" %}</span>
+                    {% endif %}
+                </td>
                 <td>{{ service.autostart|default:"---" }}</td>
                 <td>{{ service.init_level|default:"---" }}</td>
                 <td><!-- Single button -->

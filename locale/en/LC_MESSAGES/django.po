@@ -237,3 +237,6 @@ msgstr ""
 #: templates/includes/service_actions.html:7
 msgid "Status:"
 msgstr ""
+#: templates/pages/page_services.html:28
+msgid "Started"
+msgstr ""

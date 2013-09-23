@@ -80,7 +80,7 @@ class SystemServices():
                 status = False
 
             services_list.append({
-                'name': re.search('(?<= )\w+', service).group(0),
+                'name': re.search('[a-zA-Z@0-9-]{2,}', service).group(0),
                 'status': status,
             })
 
