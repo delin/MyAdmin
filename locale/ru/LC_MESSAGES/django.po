@@ -235,3 +235,6 @@ msgstr ""
 #: templates/base.html:78
 msgid "System information"
 msgstr ""
+#: templates/includes/service_actions.html:7
+msgid "Status:"
+msgstr ""

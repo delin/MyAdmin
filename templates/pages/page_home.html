@@ -18,29 +18,4 @@
             <p><a class="btn btn-primary btn-lg" href="{% url 'about' %}">{% trans "About" %}</a></p>
         </div>
     </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{% blocktrans %}System information{% endblocktrans %}</h3>
-        </div>
-        <div class="panel-body">
-            <p>
-                <strong>OS:</strong> {{ system_info.os_name }}<br>
-                <strong>Hostname:</strong> {{ system_info.hostname }}<br>
-                <strong>Kernel version:</strong> {{ system_info.kernel_version }}<br>
-                <strong>Kernel build date:</strong> {{ system_info.kernel_build }}<br>
-                <strong>Kernel arch:</strong> {{ system_info.kernel_arch }}<br>
-            </p>
-            <p>
-                <strong>Load Average:</strong><br>
-                {% for load in data.load_avg %}
-                <span class="
-                {% if load <= 1 %}text-success
-                {% elif load > 1 %}text-info
-                {% elif load > 3 %}text-danger
-                {% elif load > 4 %}text-danger
-                {% endif %}"> {{ load }}</span>{% endfor %}
-            </p>
-        </div>
-    </div>
 {% endblock %}

@@ -8,7 +8,7 @@
         <meta name="author" content="{{ data.app.author }} <{{ data.app.author_email }}>">
     {#    <link rel="shortcut icon" href="../../assets/ico/favicon.png">#}
 
-        <title>{{ page_title|default:"=)" }} &middot; {{ data.app.name }}</title>
+        <title>{% if loaded_module %}{{ loaded_module.name }}: {% endif %}{{ page_title|default:"=)" }} &middot; {{ data.app.name }}</title>
 
         <!-- Bootstrap core CSS -->
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -40,6 +40,7 @@
                     <ul class="nav navbar-nav">
                         <li id="navbar-home"><a href="{% url 'home' %}">{% trans "Dashboard" %}</a></li>
                         <li id="navbar-users"><a href="{% url 'users' %}">{% trans "Users" %}</a></li>
+                        <li id="navbar-services"><a href="{% url 'services' %}">{% trans "Services" %}</a></li>
                         <li id="navbar-modules"><a href="{% url 'modules' %}">{% trans "Modules" %}</a></li>
                         <li id="navbar-logs"><a href="{% url 'logs' %}">{% trans "Logs" %}</a></li>
                         <li id="navbar-about"><a href="{% url 'about' %}">{% trans "About" %}</a></li>
@@ -60,6 +61,9 @@
                         <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">{% blocktrans %}Toggle nav{% endblocktrans %}</button>
                     </p>
                     <div class="row">
+                        <div class="page-header">
+                            <h3>{% if loaded_module %}{{ loaded_module.name }}: {% endif %}{{ page_title }}</h3>
+                        </div>
                         {% if messages %}
                             {% for message in messages %}
                                 <div class="alert {% ifequal message.tags "error" %}alert-danger{% else %}alert-{{ message.tags }}{% endifequal %}">
@@ -78,13 +82,13 @@
                                 <h3 class="panel-title">{% blocktrans %}System information{% endblocktrans %}</h3>
                             </div>
                             <div class="panel-body">
-                                <strong>OS:</strong> {{ system_info.os_name }}<br>
-                                <strong>Hostname:</strong> {{ system_info.hostname }}<br>
-                                <strong>Kernel version:</strong> {{ system_info.kernel_version }} <br>
+                                <strong>OS:</strong> {{ data.system_info.os_name }}<br>
+                                <strong>Hostname:</strong> {{ data.system_info.hostname }}<br>
+                                <strong>Kernel version:</strong> {{ data.system_info.kernel_version }} <br>
                                 <strong>Load Average:</strong>
                                 {% for load in data.load_avg %}
                                 <span class="
-                                {% if load <= 0 %}text-success
+                                {% if load <= 1 %}text-success
                                 {% elif load > 1 %}text-info
                                 {% elif load > 3 %}text-danger
                                 {% elif load > 4 %}text-danger

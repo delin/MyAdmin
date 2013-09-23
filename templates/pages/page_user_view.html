@@ -93,6 +93,17 @@
             $("input[name='i_know_what_i_am_doing']").click(function() {
                 $('#btn-userdel').toggleClass('disabled');
             });
+            $("input[name='userdel_force']").click(function() {
+                if ($("input[name='userdel_force']").prop("checked")) {
+                    $("input[name='userdel_remove_home']")
+                            .attr("checked", "checked")
+                            .attr("disabled", "disabled");
+                } else {
+                    $("input[name='userdel_remove_home']")
+                            .removeAttr("checked")
+                            .removeAttr("disabled");
+                }
+            });
         });
     </script>
 {% endblock %}

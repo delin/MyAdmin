@@ -7,9 +7,10 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from django.utils.translation import ugettext as _
-from MyAdmin.functions import prepare_data, modules_update, get_system_users, get_system_groups, replace_in_file, get_user_info, system_cmd
-from MyAdmin.system_info import SystemInfo
+from MyAdmin.functions import prepare_data, modules_update, system_cmd
+from system_tools.services import SystemServices
 from main.models import Log
+from system_tools.users import SystemUsers
 
 
 @csrf_protect
@@ -69,14 +70,9 @@ def page_logout(request):
 def page_home(request):
     page_title = _("Home")
 
-    content = {}
-    system_info = SystemInfo()
-
     return render(request, "pages/page_home.html", {
         'page_title': page_title,
         'data': prepare_data(request),
-        'content': content,
-        'system_info': system_info.get_summary_info(),
     })
 
 
@@ -149,11 +145,12 @@ def page_modules(request):
 @require_http_methods(["GET"])
 def page_users(request):
     page_title = _("All Users")
+    user_management = SystemUsers()
 
     return render(request, "pages/page_users.html", {
         'page_title': page_title,
         'data': prepare_data(request),
-        'users': get_system_users(),
+        'users': user_management.get_users(),
     })
 
 
@@ -165,101 +162,65 @@ def page_user_add(request):
     c = {}
     c.update(csrf(request))
 
+    user_management = SystemUsers()
+
     if request.method == "POST":
         if 'login' and 'password' in request.POST:
             login = request.POST['login']
             password = request.POST['password']
 
-            useradd_options = ""
-            if 'view_advanced' in request.POST:
-                if 'create_home' and 'home_dir' in request.POST and len(request.POST) > 0:
-                    useradd_options += " -m -d %s" % request.POST['home_dir']
-
-                if 'select-groups' in request.POST:
-                    groups_list = request.POST.getlist('select-groups')
-                    if len(groups_list) > 0:
-                        groups = ",".join(str(item) for item in groups_list)
-
-                        useradd_options += " -G %s" % groups
-
-                if 'create_user_group' in request.POST:
-                    useradd_options += " -U"
+            if 'set_other_shell' and 'other_shell' in request.POST:
+                shell = request.POST['other_shell']
+            else:
+                if 'select-shell' in request.POST:
+                    shell = request.POST['select-shell']
                 else:
-                    useradd_options += " -N"
+                    shell = "/bin/false"
 
-                if 'set_other_shell' and 'other_shell' in request.POST:
-                    if os.access(request.POST['other_shell'], os.X_OK):
-                        useradd_options += " -s %s" % request.POST['other_shell']
-                else:
-                    if 'select-shell' in request.POST:
-                        if os.access(request.POST['select-shell'], os.X_OK):
-                            useradd_options += " -s %s" % request.POST['select-shell']
+            exitcode = user_management.create_user(
+                login=login,
+                password=password,
+                home_dir=request.POST.get("home_dir"),
+                in_groups=request.POST.getlist('select-groups'),
+                create_group=request.POST.get("create_user_group"),
+                shell=shell,
+                comment=request.POST.get("comment"),
+                is_system_user=request.POST.get("create_system_account"),
+            )
 
-                if 'comment' in request.POST and len(request.POST['comment']) > 0:
-                    useradd_options += " -c \"%s\"" % request.POST['comment']
+            Log(
+                action=4,
+                user=request.user,
+                os_system_code=exitcode,
+            ).save()
 
-                if 'create_system_account' in request.POST:
-                    useradd_options += " -r"
-
-            useradd = "/usr/bin/useradd %s %s" % (useradd_options, login)
-            passwd_string = "echo -e \"%s\\n%s\" | passwd %s" % (password, password, login)
-
-            try:
-                useradd_os = os.WEXITSTATUS(os.system(useradd))
-                Log(
-                    action=4,
-                    user=request.user,
-                    os_system=useradd,
-                    os_system_code=useradd_os,
-                ).save()
-            except BaseException as e:
-                Log(
-                    action=4,
-                    user=request.user,
-                    os_system=useradd,
-                    os_system_code=-1,
-                ).save()
-                messages.error(request, e)
-                return redirect('user_add')
-
-            if useradd_os == 0:
-                passwd_os = os.WEXITSTATUS(os.system(passwd_string))
-                Log(
-                    action=5,
-                    user=request.user,
-                    os_system=passwd_string,
-                    os_system_code=passwd_os,
-                ).save()
-
-                if passwd_os == 0:
-                    messages.success(request, _("User") + " " + login + " " + _("created"))
-                else:
-                    messages.error(request,  passwd_os)
+            if exitcode == 0:
+                messages.success(request, _("User") + " " + login + " " + _("created"))
 
                 if 'create_and_next' in request.POST:
                     return redirect('user_add')
 
                 return redirect('users')
-            elif useradd_os == 1:
+            elif exitcode == 1:
                 messages.error(request,  _("Can't update password file"))
-            elif useradd_os == 2:
+            elif exitcode == 2:
                 messages.error(request,  _("Invalid command syntax"))
-            elif useradd_os == 3:
+            elif exitcode == 3:
                 messages.error(request,  _("Invalid argument to option"))
-            elif useradd_os == 4:
+            elif exitcode == 4:
                 messages.error(request,  _("UID already in use (and no -o)"))
-            elif useradd_os == 6:
+            elif exitcode == 6:
                 messages.error(request,  _("Specified group doesn't exist"))
-            elif useradd_os == 9:
+            elif exitcode == 9:
                 messages.error(request,  _("Username already in use"))
-            elif useradd_os == 10:
+            elif exitcode == 10:
                 messages.error(request,  _("Can't update group file"))
-            elif useradd_os == 12:
+            elif exitcode == 12:
                 messages.error(request,  _("Can't create home directory"))
-            elif useradd_os == 13:
+            elif exitcode == 13:
                 messages.error(request,  _("Can't create mail spool"))
             else:
-                messages.error(request,  useradd_os)
+                messages.error(request,  _("Unknown exit code: ") + exitcode)
 
         return redirect('user_add')
     else:
@@ -272,8 +233,8 @@ def page_user_add(request):
         return render(request, "pages/page_user_add.html", {
             'page_title': page_title,
             'data': prepare_data(request),
-            'users': get_system_users(),
-            'groups': get_system_groups(),
+            'users': user_management.get_users(),
+            'groups': user_management.get_groups(),
             'shells': shells,
         })
 
@@ -286,7 +247,8 @@ def page_user_view(request, user_uid=0):
     c = {}
     c.update(csrf(request))
 
-    user_info = get_user_info(uid=user_uid)
+    user_management = SystemUsers()
+    user_info = user_management.get_user(uid=user_uid)
     if not user_info:
         messages.error(request, _("User not exist"))
         return redirect('users')
@@ -305,7 +267,8 @@ def page_user_edit(request, user_uid=0):
     c = {}
     c.update(csrf(request))
 
-    user_info = get_user_info(uid=user_uid)
+    user_management = SystemUsers()
+    user_info = user_management.get_user(uid=user_uid)
     if not user_info:
         messages.error(request, _("User not exist"))
         return redirect('users')
@@ -313,13 +276,12 @@ def page_user_edit(request, user_uid=0):
     if "btn-changepass" and "new_password" and "repeat_password" in request.POST:
         if request.POST.get("new_password") == request.POST.get("repeat_password"):
             password = request.POST.get("new_password")
-            passwd_string = "echo -e \"%s\\n%s\" | passwd %s" % (password, password, user_info['name'])
 
-            exit_code = system_cmd(passwd_string, request=request)
-            if exit_code == 0:
+            exitcode = user_management.change_password(user_info['name'], password)
+            if exitcode == 0:
                 messages.success(request, _("Password changed"))
             else:
-                messages.error(request, _("User not removed, see logs for more info"))
+                messages.error(request, _("Password not changed, see logs for more info"))
         else:
             messages.error(request, _("Passwords not match"))
 
@@ -329,33 +291,25 @@ def page_user_edit(request, user_uid=0):
             messages.error(request, _("You're crazy, I will not do it!"))
             return redirect('users')
 
-        options = ""
-        if request.POST.get("userdel_remove_home"):
-            options += " -r"
-        if request.POST.get("userdel_force"):
-            options += " -f"
-
-        if get_user_info(uid=user_uid):
-            os_string = "userdel %s %s" % (options, user_info['name'])
-            exit_code = system_cmd(os_string, request=request)
-            if exit_code == 0:
-                messages.success(request, _("User removed"))
-            elif exit_code == 1:
-                messages.error(request, _("Can't update password file"))
-            elif exit_code == 2:
-                messages.error(request, _("Invalid command syntax"))
-            elif exit_code == 6:
-                messages.error(request, _("Specified user doesn't exist"))
-            elif exit_code == 8:
-                messages.error(request, _("User currently logged in"))
-            elif exit_code == 10:
-                messages.error(request, _("Can't update group file"))
-            elif exit_code == 12:
-                messages.error(request, _("Can't remove home directory"))
-            else:
-                messages.error(request, _("User not removed, see logs for more info"))
+        exitcode = user_management.delete_user(user_info['name'],
+                                               force=request.POST.get("userdel_force"),
+                                               remove_home=request.POST.get("userdel_force"))
+        if exitcode == 0:
+            messages.success(request, _("User removed"))
+        elif exitcode == 1:
+            messages.error(request, _("Can't update password file"))
+        elif exitcode == 2:
+            messages.error(request, _("Invalid command syntax"))
+        elif exitcode == 6:
+            messages.error(request, _("Specified user doesn't exist"))
+        elif exitcode == 8:
+            messages.error(request, _("User currently logged in"))
+        elif exitcode == 10:
+            messages.error(request, _("Can't update group file"))
+        elif exitcode == 12:
+            messages.error(request, _("Can't remove home directory"))
         else:
-            messages.error(request, _("User not exist"))
+            messages.error(request, _("User not removed, see logs for more info"))
 
     return redirect('users')
 
@@ -365,8 +319,58 @@ def page_user_edit(request, user_uid=0):
 def page_user_group_add(request):
     page_title = _("Create new group")
 
+    user_management = SystemUsers()
     return render(request, "pages/page_user_group_add.html", {
         'page_title': page_title,
         'data': prepare_data(request),
-        'users': get_system_users(),
+        'users': user_management.get_users(),
     })
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def page_services(request):
+    page_title = _("Services")
+
+    system_services = SystemServices()
+    services = system_services.list()
+
+    return render(request, "pages/page_services.html", {
+        'page_title': page_title,
+        'data': prepare_data(request),
+        'services': services,
+    })
+
+
+@login_required
+@require_http_methods(["POST"])
+def page_service_action(request, service_name):
+    if "prev_page" in request.POST:
+        prev_page = request.POST.get("prev_page")
+    else:
+        prev_page = "services"
+
+    system_service = SystemServices()
+
+    if 'btn-reload' in request.POST:
+        if system_service.reload(service_name):
+            messages.success(request, _("Service reloaded: ") + service_name)
+        else:
+            messages.error(request, _("Service not reloaded: ") + service_name)
+    elif 'btn-restart' in request.POST:
+        if system_service.restart(service_name):
+            messages.success(request, _("Service restarted: ") + service_name)
+        else:
+            messages.error(request, _("Service not restarted: ") + service_name)
+    elif 'btn-stop' in request.POST:
+        if system_service.stop(service_name):
+            messages.success(request, _("Service stopped: ") + service_name)
+        else:
+            messages.error(request, _("Service not stopped: ") + service_name)
+    elif 'btn-start' in request.POST:
+        if system_service.start(service_name):
+            messages.success(request, _("Service started: ") + service_name)
+        else:
+            messages.error(request, _("Service not started: ") + service_name)
+
+    return redirect(prev_page)

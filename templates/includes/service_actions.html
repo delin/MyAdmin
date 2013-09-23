@@ -1,0 +1,18 @@
+{% load i18n %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{% blocktrans %}Service actions{% endblocktrans %}</h3>
+        </div>
+        <div class="panel-body">
+            <p><strong>{% trans "Status:" %}</strong> {{ status|yesno:"Started,Stopped" }}</p>
+            <form action="{% url 'service_action' name %}" method="post">{% csrf_token %}
+                <input type="hidden" name="prev_page" value="{{ prev_page }}"/>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-info{% if not status %} disabled{% endif %}" name="btn-reload">Reload</button>
+                    <button type="submit" class="btn btn-success{% if status %} disabled{% endif %}" name="btn-start">Start</button>
+                    <button type="submit" class="btn btn-danger{% if not status %} disabled{% endif %}" name="btn-stop">Stop</button>
+                    <button type="submit" class="btn btn-warning" name="btn-restart">Restart</button>
+                </div>
+            </form>
+        </div>
+    </div>

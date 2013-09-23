@@ -19,7 +19,7 @@ class SystemInfo():
         kernel_arch = uname[4]
 
         return {
-            'login': os.getlogin(),
+            # 'login': os.getlogin(),
             'uname': os.uname(),
             'os_name': os_name,
             'hostname': hostname,

@@ -1,14 +1,14 @@
-from operator import itemgetter
 import os
 import re
+
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.importlib import import_module
-import grp
-import pwd
+
 from MyAdmin.settings import APP_CONFIGS, INSTALLED_MODULES
-from MyAdmin.system_info import SystemInfo
+from system_tools.information import SystemInfo
 from main.models import Module, Log
+
 
 __author__ = 'delin'
 
@@ -36,6 +36,7 @@ def prepare_data(request):
         'app': APP_CONFIGS,
         'modules': modules,
         'load_avg': sys_info.get_load_avg(),
+        'system_info': sys_info.get_summary_info(),
     }
 
     return data
@@ -73,87 +74,6 @@ def modules_update(request):
             messages.error(request, e)
 
     return new_modules
-
-
-def get_system_users():
-    system_groups = grp.getgrall()
-    system_users = pwd.getpwall()
-
-    users = []
-    for user in system_users:
-        pw_name = user[0]
-        pw_uid = user[2]
-        pw_gid = user[3]
-        pw_gecos = user[4]
-        pw_dir = user[5]
-        pw_shell = user[6]
-
-        user_groups = []
-        for group in system_groups:
-            gr_name = group[0]
-            gr_gid = group[2]
-            gr_mem = group[3]
-
-            if pw_name in gr_mem:
-                user_groups.append({
-                    'name': gr_name,
-                    'gid': gr_gid,
-                })
-
-        users.append({
-            'name': pw_name,
-            'uid': int(pw_uid),
-            'gid': int(pw_gid),
-            'comment': pw_gecos,
-            'groups': user_groups,
-            'home_dir': pw_dir,
-            'shell': pw_shell,
-        })
-
-    return sorted(users, key=itemgetter('uid'))
-
-
-def get_system_groups():
-    system_groups = grp.getgrall()
-
-    user_groups = []
-    for group in system_groups:
-        user_groups.append({
-            'name': group[0],
-            'gid': group[2],
-            'members': group[3],
-        })
-
-    return user_groups
-
-
-def get_user_info(login=None, uid=None):
-    if login:
-        user = pwd.getpwnam(login)
-    elif uid:
-        user = pwd.getpwuid(int(uid))
-    else:
-        return False
-
-    if not user:
-        return False
-
-    all_groups = get_system_groups()
-    user_groups = []
-    for group in all_groups:
-        if user[0] in group['members']:
-            user_groups.append(group)
-
-    return {
-        'name': user[0],
-        'uid': int(user[2]),
-        'gid': int(user[3]),
-        'group': grp.getgrgid(int(user[3]))[0],
-        'comment': user[4],
-        'groups': user_groups,
-        'home_dir': user[5],
-        'shell': user[6],
-    }
 
 
 def system_cmd(cmd, request=None):

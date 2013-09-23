@@ -1,32 +1,30 @@
 {% load i18n %}
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">{% blocktrans %}Users and Groups{% endblocktrans %}</h3>
+            <h3 class="panel-title">{% blocktrans %}Users{% endblocktrans %}</h3>
         </div>
         <div class="panel-body">
-            <a class="btn btn-default" href="{% url 'user_add' %}">{% blocktrans %}Add User{% endblocktrans %}</a>
-            <a class="btn btn-default" href="{% url 'user_group_add' %}">{% blocktrans %}Add Group{% endblocktrans %}</a><br>
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{% trans "Username" %}</th>
+                        <th>{% trans "Groups" %}</th>
+                        <th>{% blocktrans %}Home dir{% endblocktrans %}</th>
+                        <th>{% trans "Shell" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users reversed %}
+                    <tr>
+                        <td>{{ forloop.revcounter }}</td>
+                        <td><a href="{% url 'user_view' user.uid %}">{{ user.name }}</a></td>
+                        <td>{% for group in user.groups %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                        <td>{{ user.home_dir }}</td>
+                        <td>{{ user.shell }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>{% trans "Username" %}</th>
-                    <th>{% trans "Groups" %}</th>
-                    <th>{% blocktrans %}Home dir{% endblocktrans %}</th>
-                    <th>{% trans "Shell" %}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users reversed %}
-                <tr>
-                    <td>{{ forloop.revcounter }}</td>
-                    <td><a href="{% url 'user_view' user.uid %}">{{ user.name }}</a></td>
-                    <td>{% for group in user.groups %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-                    <td>{{ user.home_dir }}</td>
-                    <td>{{ user.shell }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>

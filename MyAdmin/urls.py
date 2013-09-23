@@ -20,6 +20,9 @@ urlpatterns = patterns(
     url(r'^user/(?P<user_uid>\d+)/$', 'main.views.page_user_view', name='user_view'),
     url(r'^user/(?P<user_uid>\d+)/edit$', 'main.views.page_user_edit', name='user_edit'),
 
+    url(r'^services/$', 'main.views.page_services', name='services'),
+    url(r'^service/_action/(?P<service_name>[a-zA-Z@0-9-:]+)/$', 'main.views.page_service_action', name='service_action'),
+
     url(r'^logs/$', 'main.views.page_logs', name='logs'),
     url(r'^logs/(?P<log_id>\d+)/$', 'main.views.page_log_view', name='log_view'),
 

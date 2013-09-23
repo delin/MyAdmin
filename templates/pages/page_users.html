@@ -8,5 +8,14 @@
         });
     </script>
 
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{% blocktrans %}Actions{% endblocktrans %}</h3>
+        </div>
+        <div class="panel-body">
+            <a class="btn btn-default" href="{% url 'user_add' %}">{% blocktrans %}Add User{% endblocktrans %}</a>
+            <a class="btn btn-default" href="{% url 'user_group_add' %}">{% blocktrans %}Add Group{% endblocktrans %}</a><br>
+        </div>
+    </div>
     {% include "includes/users_table.html" %}
 {% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#navbar-services").addClass("active");
+        });
+    </script>
+
+    {% if services %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Autostart" %}</th>
+                <th>{% trans "Init level" %}</th>
+                <th>{% trans "Action" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ service.name|default:"---" }}</td>
+                <td>{{ service.status|yesno:"Started,Stopped,Unknown" }}</td>
+                <td>{{ service.autostart|default:"---" }}</td>
+                <td>{{ service.init_level|default:"---" }}</td>
+                <td><!-- Single button -->
+                    <form action="{% url 'service_action' service.name %}" method="post">{% csrf_token %}
+                        <div class="btn-group btn-group-xs">
+                            <button type="submit" class="btn btn-info{% if not service.status %} disabled{% endif %}" name="btn-reload"><span class="glyphicon glyphicon-repeat"></span></button>
+                            <button type="submit" class="btn btn-success{% if service.status %} disabled{% endif %}" name="btn-start"><span class="glyphicon glyphicon-play"></span></button>
+                            <button type="submit" class="btn btn-danger{% if not service.status %} disabled{% endif %}" name="btn-stop"><span class="glyphicon glyphicon-stop"></span></button>
+                            <button type="submit" class="btn btn-warning" name="btn-restart"><span class="glyphicon glyphicon-refresh"></span></button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="alert alert-warning"><strong>{% trans "Warning" %}!</strong> {% blocktrans %}No services are detected{% endblocktrans %}.</div>
+    {% endif %}
+{% endblock %}
