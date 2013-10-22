@@ -9,11 +9,9 @@
         <dd>{{ view_log.get_action_display }}</dd>
         <dt>{% blocktrans %}User{% endblocktrans %}</dt>
         <dd>{% if view_log.user %}{{ view_log.user.get_full_name|default:view_log.user.username }}{% else %}---{% endif %}</dd>
-        {% if view_log.os_system %}
         <dt>{% blocktrans %}Command{% endblocktrans %}</dt>
-        <dd>{{ view_log.os_system }}</dd>
+        <dd>{{ view_log.os_system|default:"---" }}</dd>
         <dt>{% blocktrans %}Exit code{% endblocktrans %}</dt>
         <dd>{{ view_log.os_system_code }}</dd>
-        {% endif %}
     </dl>
 {% endblock %}

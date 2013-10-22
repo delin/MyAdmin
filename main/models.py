@@ -32,14 +32,23 @@ class Log(models.Model):
         (2, _('Module upgrade')),
         (3, _('Module remove')),
         (4, _('Run command of system')),
-        (5, _('Set user password')),
+        (5, _('User create')),
+        (6, _('User delete')),
+        (7, _('User change password')),
+        (8, _('Group create')),
+        (9, _('Group delete')),
+        (10, _('Group change password')),
+        (11, _('Service stop')),
+        (12, _('Service start')),
+        (13, _('Service restart')),
+        (14, _('Service reload')),
     )
 
     date = models.DateTimeField(verbose_name=_("Date and time"), auto_now_add=True)
     action = models.PositiveSmallIntegerField(verbose_name=_("Action"), choices=ACTIONS)
     user = models.ForeignKey(User, verbose_name=_("User"), null=True, blank=True)
     os_system = models.CharField(verbose_name=_("OS String executed"), max_length=4096, null=True, blank=True)
-    os_system_code = models.IntegerField(verbose_name=_("OS command exit code"), null=True, blank=True)
+    os_system_code = models.IntegerField(verbose_name=_("OS command exit code"), default=0, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = _('Logs')

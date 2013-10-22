@@ -50,18 +50,21 @@ class SystemServices():
 
     def _init_systemd_start(self, service):
         if not self._init_systemd_status(service):
-            return not subprocess.call(["systemctl", "start", service])
+            subprocess.call(["systemctl", "start", service])
+            return self._init_systemd_status(service)
         else:
             return False
 
     def _init_systemd_stop(self, service):
         if self._init_systemd_status(service):
-            return not subprocess.call(["systemctl", "stop", service])
+            subprocess.call(["systemctl", "stop", service])
+            return not self._init_systemd_status(service)
         else:
             return False
 
     def _init_systemd_restart(self, service):
-        return not subprocess.call(["systemctl", "restart", service])
+        subprocess.call(["systemctl", "restart", service])
+        return self._init_systemd_status(service)
 
     def _init_systemd_reload(self, service):
         return not subprocess.call(["systemctl", "reload", service])
@@ -91,18 +94,21 @@ class SystemServices():
 
     def _init_systemv_start(self, service):
         if not self._init_systemv_status(service):
-            return not subprocess.call(["service", service, "start"])
+            subprocess.call(["service", service, "start"])
+            return self._init_systemv_status(service)
         else:
             return False
 
     def _init_systemv_stop(self, service):
         if self._init_systemv_status(service):
-            return not subprocess.call(["service", service, "stop"])
+            subprocess.call(["service", service, "stop"])
+            return not self._init_systemv_status(service)
         else:
             return False
 
     def _init_systemv_restart(self, service):
-        return not subprocess.call(["service", service, "restart"])
+        subprocess.call(["service", service, "restart"])
+        return self._init_systemv_status(service)
 
     def _init_systemv_reload(self, service):
         return not subprocess.call(["service", service, "reload"])

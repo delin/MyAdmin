@@ -109,7 +109,7 @@ def page_log_view(request, log_id=0):
     try:
         view_log = Log.objects.get(id=log_id)
     except Log.DoesNotExist as e:
-        messages.error(request,  e)
+        messages.error(request, e)
         return redirect('logs')
 
     return render(request, "pages/page_log_view.html", {
@@ -177,7 +177,7 @@ def page_user_add(request):
                 else:
                     shell = "/bin/false"
 
-            exitcode = user_management.create_user(
+            exit_code, exit_message = user_management.create_user(
                 login=login,
                 password=password,
                 home_dir=request.POST.get("home_dir"),
@@ -189,38 +189,18 @@ def page_user_add(request):
             )
 
             Log(
-                action=4,
+                action=5,
                 user=request.user,
-                os_system_code=exitcode,
+                os_system_code=exit_code,
             ).save()
 
-            if exitcode == 0:
+            if exit_code == 0:
                 messages.success(request, _("User") + " " + login + " " + _("created"))
-
                 if 'create_and_next' in request.POST:
                     return redirect('user_add')
-
-                return redirect('users')
-            elif exitcode == 1:
-                messages.error(request,  _("Can't update password file"))
-            elif exitcode == 2:
-                messages.error(request,  _("Invalid command syntax"))
-            elif exitcode == 3:
-                messages.error(request,  _("Invalid argument to option"))
-            elif exitcode == 4:
-                messages.error(request,  _("UID already in use (and no -o)"))
-            elif exitcode == 6:
-                messages.error(request,  _("Specified group doesn't exist"))
-            elif exitcode == 9:
-                messages.error(request,  _("Username already in use"))
-            elif exitcode == 10:
-                messages.error(request,  _("Can't update group file"))
-            elif exitcode == 12:
-                messages.error(request,  _("Can't create home directory"))
-            elif exitcode == 13:
-                messages.error(request,  _("Can't create mail spool"))
             else:
-                messages.error(request,  _("Unknown exit code: ") + exitcode)
+                messages.error(request, exit_message)
+                return redirect('users')
 
         return redirect('user_add')
     else:
@@ -277,11 +257,20 @@ def page_user_edit(request, user_uid=0):
         if request.POST.get("new_password") == request.POST.get("repeat_password"):
             password = request.POST.get("new_password")
 
-            exitcode = user_management.change_password(user_info['name'], password)
-            if exitcode == 0:
+            exit_code, exit_message = user_management.change_password(
+                login=user_info['name'],
+                new_password=password
+            )
+
+            Log(
+                action=7,
+                user=request.user,
+                os_system_code=exit_code,
+            ).save()
+            if exit_code == 0:
                 messages.success(request, _("Password changed"))
             else:
-                messages.error(request, _("Password not changed, see logs for more info"))
+                messages.error(request, exit_message)
         else:
             messages.error(request, _("Passwords not match"))
 
@@ -291,25 +280,22 @@ def page_user_edit(request, user_uid=0):
             messages.error(request, _("You're crazy, I will not do it!"))
             return redirect('users')
 
-        exitcode = user_management.delete_user(user_info['name'],
-                                               force=request.POST.get("userdel_force"),
-                                               remove_home=request.POST.get("userdel_force"))
-        if exitcode == 0:
-            messages.success(request, _("User removed"))
-        elif exitcode == 1:
-            messages.error(request, _("Can't update password file"))
-        elif exitcode == 2:
-            messages.error(request, _("Invalid command syntax"))
-        elif exitcode == 6:
-            messages.error(request, _("Specified user doesn't exist"))
-        elif exitcode == 8:
-            messages.error(request, _("User currently logged in"))
-        elif exitcode == 10:
-            messages.error(request, _("Can't update group file"))
-        elif exitcode == 12:
-            messages.error(request, _("Can't remove home directory"))
+        exit_code, exit_message = user_management.delete_user(
+            login=user_info['name'],
+            force=request.POST.get("userdel_force"),
+            remove_home=request.POST.get("userdel_force")
+        )
+
+        Log(
+            action=6,
+            user=request.user,
+            os_system_code=exit_code,
+        ).save()
+
+        if exit_code == 0:
+            messages.success(request, _("User ") + user_info['name'] + _(" deleted"))
         else:
-            messages.error(request, _("User not removed, see logs for more info"))
+            messages.error(request, exit_message)
 
     return redirect('users')
 
@@ -356,24 +342,52 @@ def page_service_action(request, service_name):
     system_service = SystemServices()
 
     if 'btn-reload' in request.POST:
-        if system_service.reload(service_name):
+        exit_code = system_service.reload(service_name)
+        if exit_code:
             messages.success(request, _("Service reloaded: ") + service_name)
         else:
             messages.error(request, _("Service not reloaded: ") + service_name)
+
+        Log(
+            action=14,
+            user=request.user,
+            os_system_code=exit_code,
+        ).save()
     elif 'btn-restart' in request.POST:
-        if system_service.restart(service_name):
+        exit_code = system_service.restart(service_name)
+        if exit_code:
             messages.success(request, _("Service restarted: ") + service_name)
         else:
             messages.error(request, _("Service not restarted: ") + service_name)
+
+        Log(
+            action=13,
+            user=request.user,
+            os_system_code=exit_code,
+        ).save()
     elif 'btn-stop' in request.POST:
-        if system_service.stop(service_name):
+        exit_code = system_service.stop(service_name)
+        if exit_code:
             messages.success(request, _("Service stopped: ") + service_name)
         else:
             messages.error(request, _("Service not stopped: ") + service_name)
+
+        Log(
+            action=11,
+            user=request.user,
+            os_system_code=exit_code,
+        ).save()
     elif 'btn-start' in request.POST:
-        if system_service.start(service_name):
+        exit_code = system_service.start(service_name)
+        if exit_code:
             messages.success(request, _("Service started: ") + service_name)
         else:
             messages.error(request, _("Service not started: ") + service_name)
+
+        Log(
+            action=12,
+            user=request.user,
+            os_system_code=exit_code,
+        ).save()
 
     return redirect(prev_page)

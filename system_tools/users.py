@@ -4,6 +4,7 @@ import subprocess
 import grp
 import pwd
 import uuid
+from django.utils.translation import ugettext as _
 
 __author__ = 'delin'
 
@@ -14,6 +15,39 @@ class SystemUsers():
 
     def _hash_password(self, password):
         return crypt(password, uuid.uuid4().hex[:2])
+
+    def _exit_messages(self, exit_code):
+        if exit_code == 0:
+            return_message = _("Success")
+        elif exit_code == 1:
+            return_message = _("Can't update password file")
+        elif exit_code == 2:
+            return_message = _("Invalid command syntax")
+        elif exit_code == 3:
+            return_message = _("Invalid argument to option")
+        elif exit_code == 4:
+            return_message = _("UID already in use (and no -o)")
+        elif exit_code == 6:
+            return_message = _("Specified group or user doesn't exist")
+        elif exit_code == 8:
+            return_message = _("User currently logged in")
+        elif exit_code == 9:
+            return_message = _("Username already in use")
+        elif exit_code == 10:
+            return_message = _("Can't update group file")
+        elif exit_code == 10:
+            return_message = _(
+                "Insufficient space to move the home directory (-m option). Other update requests will be implemented/")
+        elif exit_code == 12:
+            return_message = _("Can't create home directory")
+        elif exit_code == 13:
+            return_message = _("Can't create mail spool")
+        elif exit_code == 14:
+            return_message = _("Can't update SELinux user mapping")
+        else:
+            return_message = _("Unknown exit code: ") + exit_code
+
+        return return_message
 
     def get_users(self):
         system_groups = grp.getgrall()
@@ -126,7 +160,9 @@ class SystemUsers():
 
         options.append(group)
 
-        return subprocess.call(["groupadd"] + options)
+        exit_code = subprocess.call(["groupadd"] + options)
+
+        return exit_code, self._exit_messages(exit_code)
 
     def create_user(self, login, password=None, home_dir=None, in_groups=None, create_group=True, shell="/bin/false",
                     comment=None, is_system_user=False, chroot=None):
@@ -166,7 +202,9 @@ class SystemUsers():
 
         options.append(login)
 
-        return subprocess.call(["useradd"] + options)
+        exit_code = subprocess.call(["useradd"] + options)
+
+        return exit_code, self._exit_messages(exit_code)
 
     def change_password(self, login, new_password, chroot=None):
         options = ["--password", self._hash_password(new_password)]
@@ -178,7 +216,9 @@ class SystemUsers():
 
         options.append(login)
 
-        return subprocess.call(["usermod"] + options)
+        exit_code = subprocess.call(["usermod"] + options)
+
+        return exit_code, self._exit_messages(exit_code)
 
     def delete_user(self, login, force=False, remove_home=False, chroot=None):
         options = []
@@ -198,4 +238,6 @@ class SystemUsers():
 
         options.append(login)
 
-        return subprocess.call(["userdel"] + options)
+        exit_code = subprocess.call(["userdel"] + options)
+
+        return exit_code, self._exit_messages(exit_code)
